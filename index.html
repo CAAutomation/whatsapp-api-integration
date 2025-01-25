@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp API Integration</title>
+</head>
+<body>
+    <h1>Send a WhatsApp Message</h1>
+    <form id="messageForm">
+        <label for="phone">Phone Number (with country code):</label>
+        <input type="text" id="phone" name="phone" required>
+        <br><br>
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required></textarea>
+        <br><br>
+        <button type="submit">Send</button>
+    </form>
+    <p id="status"></p>
+
+    <script>
+        const form = document.getElementById('messageForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const phone = document.getElementById('phone').value;
+            const message = document.getElementById('message').value;
+
+            try {
+                const response = await fetch('/send-message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ phone, message }),
+                });
+
+                const result = await response.json();
+                document.getElementById('status').textContent = result.success
+                    ? 'Message sent successfully!'
+                    : 'Failed to send message.';
+            } catch (error) {
+                document.getElementById('status').textContent = 'Error: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>
